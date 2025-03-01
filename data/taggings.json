@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "tag_id": 1,
+    "taggable_id": 598,
+    "taggable_type": "Episode",
+    "tagger_id": null,
+    "tagger_type": null,
+    "context": "tags",
+    "created_at": "2016-03-27 17:49:17.560733"
+  },
+  {
+    "id": 2,
+    "tag_id": 2,
+    "taggable_id": 598,
+    "taggable_type": "Episode",
+    "tagger_id": null,
+    "tagger_type": null,
+    "context": "tags",
+    "created_at": "2016-03-27 17:49:17.571822"
+  }
+]

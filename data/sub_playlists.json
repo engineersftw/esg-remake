@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "playlist_id": 13,
+    "sub_playlist_id": 14,
+    "created_at": "2016-04-09 03:30:18.388076",
+    "updated_at": "2016-04-09 03:30:18.388076",
+    "sequence": 1
+  },
+  {
+    "id": 2,
+    "playlist_id": 13,
+    "sub_playlist_id": 15,
+    "created_at": "2016-04-09 03:30:25.616088",
+    "updated_at": "2016-04-09 03:30:25.616088",
+    "sequence": 2
+  },
+  {
+    "id": 3,
+    "playlist_id": 13,
+    "sub_playlist_id": 16,
+    "created_at": "2016-04-09 03:30:33.146255",
+    "updated_at": "2016-04-09 03:30:33.146255",
+    "sequence": 3
+  },
+  {
+    "id": 4,
+    "playlist_id": 13,
+    "sub_playlist_id": 17,
+    "created_at": "2016-04-09 03:30:42.555241",
+    "updated_at": "2016-04-09 03:30:42.555241",
+    "sequence": 4
+  },
+  {
+    "id": 5,
+    "playlist_id": 13,
+    "sub_playlist_id": 18,
+    "created_at": "2016-04-09 03:30:55.255386",
+    "updated_at": "2016-04-09 03:30:55.255386",
+    "sequence": 5
+  },
+  {
+    "id": 6,
+    "playlist_id": 24,
+    "sub_playlist_id": 25,
+    "created_at": "2016-08-28 03:36:10.885495",
+    "updated_at": "2016-08-28 03:36:10.885495",
+    "sequence": 1
+  },
+  {
+    "id": 7,
+    "playlist_id": 26,
+    "sub_playlist_id": 27,
+    "created_at": "2016-09-12 08:09:32.448304",
+    "updated_at": "2016-09-12 08:09:32.448304",
+    "sequence": 1
+  },
+  {
+    "id": 8,
+    "playlist_id": 26,
+    "sub_playlist_id": 28,
+    "created_at": "2016-09-12 08:09:43.726914",
+    "updated_at": "2016-09-12 08:09:43.726914",
+    "sequence": 1
+  }
+]
