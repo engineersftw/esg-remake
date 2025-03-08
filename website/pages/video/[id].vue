@@ -14,8 +14,6 @@ async function getVideo() {
     .limit(1)
     .maybeSingle();
 
-  console.log(data);
-
   video.value = data;
 }
 
