@@ -1,4 +1,5 @@
 <script setup>
+import YouTubeVideo from "~/components/YouTubeVideo.vue";
 import { useSupabase } from "~/composable/supabase";
 
 const video = ref();
@@ -17,18 +18,11 @@ async function getVideo() {
   video.value = data;
 }
 
-const videoUrl = computed(() => {
-  return `https://www.youtube.com/watch?v=${video.value?.video_id}`;
-});
-
 onMounted(() => {
   getVideo();
 });
 </script>
 
 <template>
-  <h1>{{ video?.title }}</h1>
-  <p>{{ video?.description }}</p>
-  <p><img :src="video?.image3" alt="Video thumbnail" /></p>
-  <p><a :href="videoUrl" target="_blank">Watch video</a></p>
+  <YouTubeVideo :video="video" />
 </template>
