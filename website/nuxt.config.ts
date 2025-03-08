@@ -10,12 +10,7 @@ export default defineNuxtConfig({
   },
   hooks: {
     async "prerender:routes"(ctx) {
-      const samplePage = {
-        name: "sample",
-        content: "Hello World!",
-      };
-
-      ctx.routes.add(`/video/${samplePage.name}`);
+      ctx.routes.add("/");
     },
   },
 });
