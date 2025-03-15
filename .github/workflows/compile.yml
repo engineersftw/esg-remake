@@ -1,0 +1,32 @@
+name: Compile playlists from YouTube
+
+on:
+  # schedule:
+  #   - cron: "0 0 * * *"
+  push:
+    branches:
+      - youtube-cron
+
+jobs:
+  build:
+    name: Compile playlists from YouTube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Clone repository
+        uses: GuillaumeFalourd/clone-github-repo-action@v2.3
+        with:
+          depth: 1
+          branch: 'main'
+          owner: 'engineersftw'
+          repository: 'esg-remake'
+      - name: Access cloned repository content
+        run: |
+          cd esg-remake
+          ls -la
+          cd youtube-data
+      # - name: Install dependencies
+      #   run: npm install
