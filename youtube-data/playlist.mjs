@@ -3,6 +3,8 @@
 import "dotenv/config";
 import { youtube_v3 } from "@googleapis/youtube";
 
+const recordsPerPage = 2;
+
 const youtube = new youtube_v3.Youtube({
   version: "v3", // specify the API version to use, in this case v3
   auth: process.env.YOUTUBE_API_KEY,
@@ -26,7 +28,7 @@ const fetchPlaylistItems = async (playlistId, nextPageToken = "") => {
     const res = await youtube.playlistItems.list({
       part: "id,snippet",
       playlistId: playlistId,
-      maxResults: 10,
+      maxResults: recordsPerPage,
       pageToken: nextPageToken,
     });
     console.log("Status code: " + res.status);
@@ -36,16 +38,30 @@ const fetchPlaylistItems = async (playlistId, nextPageToken = "") => {
   }
 };
 
-const runSample = async () => {
-  const playlistDetails = await fetchPlaylistDetails(
-    "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1"
-  );
-  const playlistItems = await fetchPlaylistItems(
-    "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1"
-  );
+const runCompiler = async () => {
+  const playlistId = "PL7fTdQ2ppzdASPdg05qxv_TNBugtu82Nw";
+  // const playlistId = "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1";
 
-  console.log("Details:", JSON.stringify(playlistDetails, null, 2));
-  console.log("Items:", JSON.stringify(playlistItems, null, 2));
+  const playlistDetails = await fetchPlaylistDetails(playlistId);
+  console.log("Playlist Details:", JSON.stringify(playlistDetails, null, 2));
+
+  let nextPageToken = "";
+  let hasNextPage = true;
+  let currPage = 1;
+  while (hasNextPage) {
+    console.log(`Fetching Page ${currPage++}`);
+    const playlistItems = await fetchPlaylistItems(playlistId, nextPageToken);
+    console.log(
+      "Videos inside the playlist:",
+      JSON.stringify(playlistItems, null, 2)
+    );
+
+    if (!playlistItems.hasOwnProperty("nextPageToken")) {
+      hasNextPage = false;
+    } else {
+      nextPageToken = playlistItems.nextPageToken;
+    }
+  }
 };
 
-runSample().catch(console.error);
+runCompiler().catch(console.error);
