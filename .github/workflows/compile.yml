@@ -1,0 +1,33 @@
+name: Compile playlists from YouTube
+
+on:
+  schedule:
+    - cron: "0 */3 * * *" # At minute 0 past every 3rd hour.
+  # push:
+  #   branches:
+  #     - youtube-cron
+
+jobs:
+  build:
+    name: Compile playlists from YouTube
+    runs-on: ubuntu-latest
+    env:
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+            youtube-data
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'youtube-data/package-lock.json'
+      - name: Install dependencies
+        run: npm install
+        working-directory: youtube-data
+      - name: Fetch YouTube Playlists
+        run: npm run playlist
+        working-directory: youtube-data
