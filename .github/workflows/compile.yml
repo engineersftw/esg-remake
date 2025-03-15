@@ -12,15 +12,15 @@ jobs:
   build:
     name: Compile playlists from YouTube
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
         with:
-          sparse-checkout: |
-            .github
-            youtube-data
+          ref: ${{ github.head_ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -37,3 +37,6 @@ jobs:
         with:
           name: video_playlist
           path: youtube-data/video_playlist.csv
+      - name: Copy playlist to data folder
+        run: cp -f youtube-data/video_playlist.csv data/video_playlist.csv
+      - uses: stefanzweifel/git-auto-commit-action@v5
