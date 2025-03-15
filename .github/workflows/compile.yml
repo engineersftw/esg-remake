@@ -18,9 +18,6 @@ jobs:
           sparse-checkout: |
             .github
             youtube-data
-      - name: Access cloned repository content
-        run: cd youtube-data && ls -al
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -28,3 +25,4 @@ jobs:
           cache-dependency-path: 'youtube-data/package-lock.json'
       - name: Install dependencies
         run: npm install
+        working-directory: youtube-data
