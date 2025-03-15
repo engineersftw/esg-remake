@@ -8,7 +8,7 @@ const youtube = new youtube_v3.Youtube({
   auth: process.env.API_KEY,
 });
 
-const fetchPlaylist = async (playlistId) => {
+const fetchPlaylistDetails = async (playlistId) => {
   try {
     const res = await youtube.playlists.list({
       part: "id,snippet",
@@ -21,10 +21,31 @@ const fetchPlaylist = async (playlistId) => {
   }
 };
 
-const runSample = async () => {
-  const data = await fetchPlaylist("PLIivdWyY5sqIij_cgINUHZDMnGjVx3rxi");
+const fetchPlaylistItems = async (playlistId, nextPageToken = "") => {
+  try {
+    const res = await youtube.playlistItems.list({
+      part: "id,snippet",
+      playlistId: playlistId,
+      maxResults: 10,
+      pageToken: nextPageToken,
+    });
+    console.log("Status code: " + res.status);
+    return res.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-  console.log(JSON.stringify(data, null, 2));
+const runSample = async () => {
+  const playlistDetails = await fetchPlaylistDetails(
+    "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1"
+  );
+  const playlistItems = await fetchPlaylistItems(
+    "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1"
+  );
+
+  console.log("Details:", JSON.stringify(playlistDetails, null, 2));
+  console.log("Items:", JSON.stringify(playlistItems, null, 2));
 };
 
 runSample().catch(console.error);
