@@ -1,11 +1,11 @@
 name: Compile playlists from YouTube
 
 on:
-  # schedule:
-  #   - cron: "0 */3 * * *" # At minute 0 past every 3rd hour.
-  push:
-    branches:
-      - write-to-csv
+  schedule:
+    - cron: "0 */3 * * *" # At minute 0 past every 3rd hour.
+  # push:
+  #   branches:
+  #     - write-to-csv
 
 jobs:
   build:
