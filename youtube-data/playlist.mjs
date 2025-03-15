@@ -2,8 +2,11 @@
 
 import "dotenv/config";
 import { youtube_v3 } from "@googleapis/youtube";
+import { stringify } from "csv-stringify";
+import fs from "fs";
 
 const recordsPerPage = 2;
+const csvFileName = "video_playlist.csv";
 
 const youtube = new youtube_v3.Youtube({
   version: "v3", // specify the API version to use, in this case v3
@@ -45,16 +48,40 @@ const runCompiler = async () => {
   const playlistDetails = await fetchPlaylistDetails(playlistId);
   console.log("Playlist Details:", JSON.stringify(playlistDetails, null, 2));
 
+  const fileStream = fs.createWriteStream(csvFileName, { flags: "w" });
+  const stringifier = stringify({ header: false });
+
+  stringifier
+    .pipe(fileStream)
+    .on("error", (err) => console.error(err))
+    .on("finish", () => console.log("Done writing CSV file"));
+
+  stringifier.write([
+    "title",
+    "description",
+    "publishedAt",
+    "channelTitle",
+    "playlistId",
+    "videoId",
+  ]);
+
   let nextPageToken = "";
   let hasNextPage = true;
   let currPage = 1;
   while (hasNextPage) {
     console.log(`Fetching Page ${currPage++}`);
     const playlistItems = await fetchPlaylistItems(playlistId, nextPageToken);
-    console.log(
-      "Videos inside the playlist:",
-      JSON.stringify(playlistItems, null, 2)
-    );
+
+    playlistItems.items.forEach((item) => {
+      stringifier.write([
+        item.snippet.title,
+        item.snippet.description,
+        item.snippet.publishedAt,
+        item.snippet.channelTitle,
+        item.snippet.playlistId,
+        item.snippet.resourceId.videoId,
+      ]);
+    });
 
     if (!playlistItems.hasOwnProperty("nextPageToken")) {
       hasNextPage = false;
@@ -62,6 +89,8 @@ const runCompiler = async () => {
       nextPageToken = playlistItems.nextPageToken;
     }
   }
+
+  stringifier.end();
 };
 
 runCompiler().catch(console.error);
