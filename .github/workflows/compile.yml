@@ -5,7 +5,7 @@ on:
     - cron: "0 */3 * * *" # At minute 0 past every 3rd hour.
   # push:
   #   branches:
-  #     - youtube-cron
+  #     - write-to-csv
 
 jobs:
   build:
@@ -31,3 +31,8 @@ jobs:
       - name: Fetch YouTube Playlists
         run: npm run playlist
         working-directory: youtube-data
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: video_playlist
+          path: youtube-data/video_playlist.csv

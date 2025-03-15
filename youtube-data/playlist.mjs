@@ -2,6 +2,11 @@
 
 import "dotenv/config";
 import { youtube_v3 } from "@googleapis/youtube";
+import { stringify } from "csv-stringify";
+import fs from "fs";
+
+const recordsPerPage = 2;
+const csvFileName = "video_playlist.csv";
 
 const youtube = new youtube_v3.Youtube({
   version: "v3", // specify the API version to use, in this case v3
@@ -26,7 +31,7 @@ const fetchPlaylistItems = async (playlistId, nextPageToken = "") => {
     const res = await youtube.playlistItems.list({
       part: "id,snippet",
       playlistId: playlistId,
-      maxResults: 10,
+      maxResults: recordsPerPage,
       pageToken: nextPageToken,
     });
     console.log("Status code: " + res.status);
@@ -36,16 +41,56 @@ const fetchPlaylistItems = async (playlistId, nextPageToken = "") => {
   }
 };
 
-const runSample = async () => {
-  const playlistDetails = await fetchPlaylistDetails(
-    "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1"
-  );
-  const playlistItems = await fetchPlaylistItems(
-    "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1"
-  );
+const runCompiler = async () => {
+  const playlistId = "PL7fTdQ2ppzdASPdg05qxv_TNBugtu82Nw";
+  // const playlistId = "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1";
 
-  console.log("Details:", JSON.stringify(playlistDetails, null, 2));
-  console.log("Items:", JSON.stringify(playlistItems, null, 2));
+  const playlistDetails = await fetchPlaylistDetails(playlistId);
+  console.log("Playlist Details:", JSON.stringify(playlistDetails, null, 2));
+
+  const fileStream = fs.createWriteStream(csvFileName, { flags: "w" });
+  const stringifier = stringify({ header: false });
+
+  stringifier
+    .pipe(fileStream)
+    .on("error", (err) => console.error(err))
+    .on("finish", () => console.log("Done writing CSV file"));
+
+  stringifier.write([
+    "title",
+    "description",
+    "publishedAt",
+    "channelTitle",
+    "playlistId",
+    "videoId",
+  ]);
+
+  let nextPageToken = "";
+  let hasNextPage = true;
+  let currPage = 1;
+  while (hasNextPage) {
+    console.log(`Fetching Page ${currPage++}`);
+    const playlistItems = await fetchPlaylistItems(playlistId, nextPageToken);
+
+    playlistItems.items.forEach((item) => {
+      stringifier.write([
+        item.snippet.title,
+        item.snippet.description,
+        item.snippet.publishedAt,
+        item.snippet.channelTitle,
+        item.snippet.playlistId,
+        item.snippet.resourceId.videoId,
+      ]);
+    });
+
+    if (!playlistItems.hasOwnProperty("nextPageToken")) {
+      hasNextPage = false;
+    } else {
+      nextPageToken = playlistItems.nextPageToken;
+    }
+  }
+
+  stringifier.end();
 };
 
-runSample().catch(console.error);
+runCompiler().catch(console.error);
