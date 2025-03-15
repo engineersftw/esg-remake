@@ -12,10 +12,10 @@ jobs:
     name: Compile playlists from YouTube
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 20
+      #     cache: npm
       - name: Clone repository
         uses: GuillaumeFalourd/clone-github-repo-action@v2.3
         with:
