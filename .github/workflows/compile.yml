@@ -11,6 +11,8 @@ jobs:
   build:
     name: Compile playlists from YouTube
     runs-on: ubuntu-latest
+    env:
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -25,4 +27,7 @@ jobs:
           cache-dependency-path: 'youtube-data/package-lock.json'
       - name: Install dependencies
         run: npm install
+        working-directory: youtube-data
+      - name: Fetch YouTube Playlists
+        run: npm run playlist
         working-directory: youtube-data

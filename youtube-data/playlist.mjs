@@ -5,7 +5,7 @@ import { youtube_v3 } from "@googleapis/youtube";
 
 const youtube = new youtube_v3.Youtube({
   version: "v3", // specify the API version to use, in this case v3
-  auth: process.env.API_KEY,
+  auth: process.env.YOUTUBE_API_KEY,
 });
 
 const fetchPlaylistDetails = async (playlistId) => {
