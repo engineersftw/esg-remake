@@ -5,7 +5,7 @@ import { youtube_v3 } from "@googleapis/youtube";
 import { stringify } from "csv-stringify";
 import fs from "fs";
 
-const recordsPerPage = 2;
+const recordsPerPage = 100;
 const csvFileName = "video_playlist.csv";
 
 const youtube = new youtube_v3.Youtube({
@@ -42,8 +42,8 @@ const fetchPlaylistItems = async (playlistId, nextPageToken = "") => {
 };
 
 const runCompiler = async () => {
-  const playlistId = "PL7fTdQ2ppzdASPdg05qxv_TNBugtu82Nw";
-  // const playlistId = "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1";
+  // const playlistId = "PL7fTdQ2ppzdASPdg05qxv_TNBugtu82Nw";
+  const playlistId = "PLECEw2eFfW7hYMucZmsrryV_9nIc485P1";
 
   const playlistDetails = await fetchPlaylistDetails(playlistId);
   console.log("Playlist Details:", JSON.stringify(playlistDetails, null, 2));
@@ -91,11 +91,11 @@ const runCompiler = async () => {
         item.snippet.videoOwnerChannelTitle,
         item.snippet.playlistId,
         playlistDetails.items[0].snippet.title,
-        item.snippet.thumbnails.default.url,
-        item.snippet.thumbnails.medium.url,
-        item.snippet.thumbnails.high.url,
-        item.snippet.thumbnails.standard?.url || "",
-        item.snippet.thumbnails.maxres?.url || "",
+        item.snippet?.thumbnails?.default?.url,
+        item.snippet?.thumbnails?.medium?.url,
+        item.snippet?.thumbnails?.high?.url,
+        item.snippet?.thumbnails?.standard?.url || "",
+        item.snippet?.thumbnails?.maxres?.url || "",
       ]);
     });
 
