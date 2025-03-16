@@ -1,0 +1,23 @@
+---
+import { getCollection } from "astro:content";
+
+const videos = (await getCollection("video")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<h1>Videos</h1>
+
+<ul>
+  {
+    videos.map((video) => (
+      <li>
+        <a href={`/video/${video.id}`}>
+          <img src={video.data.thumbnailMedium} alt={video.data.videoTitle} />
+          <h2>{video.data.videoTitle}</h2>
+          <p>{video.data.videoDescription}</p>
+        </a>
+      </li>
+    ))
+  }
+</ul>
