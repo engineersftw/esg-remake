@@ -57,12 +57,19 @@ const runCompiler = async () => {
     .on("finish", () => console.log("Done writing CSV file"));
 
   stringifier.write([
-    "title",
-    "description",
+    "videoId",
+    "videoTitle",
+    "videoDescription",
     "publishedAt",
+    "channelId",
     "channelTitle",
     "playlistId",
-    "videoId",
+    "playlistTitle",
+    "thumbnailDefault",
+    "thumbnailMedium",
+    "thumbnailHigh",
+    "thumbnailStandard",
+    "thumbnailMaxres",
   ]);
 
   let nextPageToken = "";
@@ -72,14 +79,23 @@ const runCompiler = async () => {
     console.log(`Fetching Page ${currPage++}`);
     const playlistItems = await fetchPlaylistItems(playlistId, nextPageToken);
 
+    // console.log("Playlist Items:", JSON.stringify(playlistItems, null, 2));
+
     playlistItems.items.forEach((item) => {
       stringifier.write([
+        item.snippet.resourceId.videoId,
         item.snippet.title,
         item.snippet.description,
         item.snippet.publishedAt,
-        item.snippet.channelTitle,
+        item.snippet.videoOwnerChannelId,
+        item.snippet.videoOwnerChannelTitle,
         item.snippet.playlistId,
-        item.snippet.resourceId.videoId,
+        playlistDetails.items[0].snippet.title,
+        item.snippet.thumbnails.default.url,
+        item.snippet.thumbnails.medium.url,
+        item.snippet.thumbnails.high.url,
+        item.snippet.thumbnails.standard?.url || "",
+        item.snippet.thumbnails.maxres?.url || "",
       ]);
     });
 
