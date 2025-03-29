@@ -1,0 +1,19 @@
+---
+import { getCollection } from "astro:content";
+
+const organizations = await getCollection("organization");
+---
+
+<h1>Organizations</h1>
+
+<ul>
+  {
+    organizations.map((organization) => (
+      <li>
+        <a href={`/organization/${organization.id}`}>
+          {organization.data.orgTitle}
+        </a>
+      </li>
+    ))
+  }
+</ul>

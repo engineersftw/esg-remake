@@ -1,0 +1,27 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import { toSlug } from "../../helpers/url_helpers";
+
+export async function getStaticPaths() {
+  const organizations = await getCollection("organization");
+  return organizations.map((organization) => {
+    const actualSlug = organization.data.slug
+      ? organization.data.slug
+      : `${toSlug(organization.data.orgTitle)}--${organization.id}`;
+
+    return {
+      params: { slug: actualSlug },
+      props: organization,
+    };
+  });
+}
+type Props = CollectionEntry<"organization">;
+
+const organization = Astro.props;
+---
+
+<div>
+  <img src={organization.data.logoImage} alt={organization.data.orgTitle} />
+  <h1>{organization.data.orgTitle}</h1>
+  <p>{organization.data.orgDescription}</p>
+</div>

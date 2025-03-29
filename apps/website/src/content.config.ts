@@ -21,6 +21,7 @@ const video = defineCollection({
     const { data, error } = await supabase
       .from("episodes")
       .select()
+      .eq("active", true)
       .limit(100)
       .order("created_at", { ascending: false });
 
@@ -52,4 +53,40 @@ const video = defineCollection({
   }),
 });
 
-export const collections = { blog, video };
+const organization = defineCollection({
+  loader: async () => {
+    const { data, error } = await supabase
+      .from("organizations")
+      .select()
+      .eq("active", true)
+      .limit(100)
+      .order("title");
+
+    if (error) {
+      console.error("Error fetching data from Supabase:", error);
+      return [];
+    }
+    return data.map((row: any) => ({
+      id: `${row["id"]}`,
+      orgTitle: row["title"],
+      orgDescription: row["description"],
+      website: row["website"],
+      twitter: row["twitter"],
+      logoImage: row["image"],
+      contactPerson: row["contact_person"],
+      slug: row["slug"],
+    }));
+  },
+  schema: z.object({
+    id: z.string(),
+    orgTitle: z.string(),
+    orgDescription: z.string().nullable(),
+    website: z.string().nullable(),
+    twitter: z.string().nullable(),
+    logoImage: z.string().nullable(),
+    contactPerson: z.string().nullable(),
+    slug: z.string().nullable(),
+  }),
+});
+
+export const collections = { blog, video, organization };

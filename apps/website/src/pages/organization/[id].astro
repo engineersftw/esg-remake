@@ -1,0 +1,23 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import { toSlug } from "../../helpers/url_helpers";
+
+export async function getStaticPaths() {
+  const organizations = await getCollection("organization");
+  return organizations.map((organization) => ({
+    params: { id: organization.id },
+    props: organization,
+  }));
+}
+type Props = CollectionEntry<"video">;
+
+const organization = Astro.props;
+
+// Check if slug exists and redirect to slug
+
+const actualSlug = organization.data.slug
+  ? organization.data.slug
+  : `${toSlug(organization.data.orgTitle)}--${organization.id}`;
+
+return Astro.redirect(`/organization/${actualSlug}`, 301);
+---
