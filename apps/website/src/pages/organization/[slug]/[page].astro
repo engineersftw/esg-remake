@@ -9,13 +9,12 @@ export async function getStaticPaths({ paginate }) {
     return paginate(organization.data.videos, {
       params: { slug: organization.data.slug },
       pageSize: 25,
-      props: { organization }
+      props: { organization },
     });
   });
 }
 
 const { page, organization } = Astro.props;
-
 ---
 
 <div>
@@ -25,23 +24,19 @@ const { page, organization } = Astro.props;
 
   <h2>Videos ({page.total})</h2>
   <ul>
-    {page.data.map((video) => {
-      return <li>
-        <div>
-          <h1>{video.videoTitle}</h1>
-          <iframe
-            width="560"
-            height="315"
-            src=`https://www.youtube.com/embed/${video.youtubeVideoId}`
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen></iframe>
-          <p>{video.videoDescription}</p>
-        </div>
-      </li>
-    })}
+    {
+      page.data.map((video) => {
+        return (
+          <li>
+            <a href={`/v/${video.id}`}>
+              <img src={video.thumbnailMedium} alt={video.videoTitle} />
+              <h2>{video.videoTitle}</h2>
+              <p>{video.videoDescription}</p>
+            </a>
+          </li>
+        );
+      })
+    }
   </ul>
 
   <div>
@@ -52,10 +47,8 @@ const { page, organization } = Astro.props;
   </div>
 </div>
 
-
 <style>
   p {
     white-space: pre-line;
   }
 </style>
-
