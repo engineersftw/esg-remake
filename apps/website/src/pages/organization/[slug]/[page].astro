@@ -1,0 +1,61 @@
+---
+import { getCollection } from "astro:content";
+import { toSlug } from "../../../helpers/url_helpers";
+
+export async function getStaticPaths({ paginate }) {
+  const organizations = await getCollection("organization");
+
+  return organizations.flatMap((organization) => {
+    return paginate(organization.data.videos, {
+      params: { slug: organization.data.slug },
+      pageSize: 25,
+      props: { organization }
+    });
+  });
+}
+
+const { page, organization } = Astro.props;
+
+---
+
+<div>
+  <img src={organization.data.logoImage} alt={organization.data.orgTitle} />
+  <h1>{organization.data.orgTitle}</h1>
+  <p>{organization.data.orgDescription}</p>
+
+  <h2>Videos ({page.total})</h2>
+  <ul>
+    {page.data.map((video) => {
+      return <li>
+        <div>
+          <h1>{video.videoTitle}</h1>
+          <iframe
+            width="560"
+            height="315"
+            src=`https://www.youtube.com/embed/${video.youtubeVideoId}`
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+          <p>{video.videoDescription}</p>
+        </div>
+      </li>
+    })}
+  </ul>
+
+  <div>
+    {page.url.first ? <a href={page.url.first}>First</a> : null}
+    {page.url.prev ? <a href={page.url.prev}>Previous</a> : null}
+    {page.url.next ? <a href={page.url.next}>Next</a> : null}
+    {page.url.last ? <a href={page.url.last}>Last</a> : null}
+  </div>
+</div>
+
+
+<style>
+  p {
+    white-space: pre-line;
+  }
+</style>
+

@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check_query": "node check_query.js"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.2.0",

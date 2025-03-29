@@ -5,6 +5,9 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "http://localhost:4321",
+  site: process.env.HOSTNAME ? process.env.HOSTNAME : "http://localhost:4321",
   integrations: [mdx(), sitemap()],
+  redirects: {
+    "/episodes": "/videos",
+  },
 });
