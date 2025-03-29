@@ -1,6 +1,6 @@
-import { glob, file } from "astro/loaders";
+import { glob } from "astro/loaders";
 import { defineCollection, z } from "astro:content";
-import Papa from "papaparse";
+import supabase from "./libs/supabase";
 
 const blog = defineCollection({
   // Load Markdown and MDX files in the `src/content/blog/` directory.
@@ -17,42 +17,38 @@ const blog = defineCollection({
 });
 
 const video = defineCollection({
-  loader: file("src/content/videos/video_playlist.csv", {
-    parser: (fileContent) => {
-      const response = Papa.parse(fileContent, { header: true });
+  loader: async () => {
+    const { data, error } = await supabase
+      .from("episodes")
+      .select()
+      .limit(100)
+      .order("created_at", { ascending: false });
 
-      return response.data.map((row: any) => ({
-        id: row["videoId"],
-        videoTitle: row["videoTitle"],
-        videoDescription: row["videoDescription"],
-        pubDate: new Date(row["publishedAt"]),
-        channelId: row["channelId"],
-        channelTitle: row["channelTitle"],
-        playlistId: row["playlistId"],
-        playlistTitle: row["playlistTitle"],
-        thumbnailDefault: row["thumbnailDefault"],
-        thumbnailMedium: row["thumbnailMedium"],
-        thumbnailHigh: row["thumbnailHigh"],
-        thumbnailStandard: row["thumbnailStandard"],
-        thumbnailMaxres: row["thumbnailMaxres"],
-      }));
-    },
-  }),
+    if (error) {
+      console.error("Error fetching data from Supabase:", error);
+      return [];
+    }
+
+    return data.map((row: any) => ({
+      id: `${row["id"]}`,
+      youtubeVideoId: row["video_id"],
+      videoTitle: row["title"],
+      videoDescription: row["description"],
+      pubDate: new Date(row["published_at"]),
+      thumbnailDefault: row["image1"],
+      thumbnailMedium: row["image2"],
+      thumbnailHigh: row["image3"],
+    }));
+  },
   schema: z.object({
     id: z.string(),
+    youtubeVideoId: z.string(),
     videoTitle: z.string(),
     videoDescription: z.string(),
-    // Transform string to Date object
     pubDate: z.coerce.date(),
-    channelId: z.string(),
-    channelTitle: z.string(),
-    playlistId: z.string(),
-    playlistTitle: z.string(),
     thumbnailDefault: z.string(),
     thumbnailMedium: z.string(),
     thumbnailHigh: z.string(),
-    thumbnailStandard: z.string(),
-    thumbnailMaxres: z.string(),
   }),
 });
 

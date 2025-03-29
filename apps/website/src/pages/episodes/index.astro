@@ -12,7 +12,7 @@ const videos = (await getCollection("video")).sort(
   {
     videos.map((video) => (
       <li>
-        <a href={`/video/${video.id}`}>
+        <a href={`/v/${video.id}`}>
           <img src={video.data.thumbnailMedium} alt={video.data.videoTitle} />
           <h2>{video.data.videoTitle}</h2>
           <p>{video.data.videoDescription}</p>
