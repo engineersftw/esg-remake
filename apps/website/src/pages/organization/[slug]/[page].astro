@@ -17,7 +17,16 @@ const { page, organization } = Astro.props;
 ---
 
 <div>
-  <img src={organization.data.logoImage} alt={organization.data.orgTitle} />
+  {
+    organization.data.logoImage && (
+      <p>
+        <img
+          src={organization.data.logoImage}
+          alt={organization.data.orgTitle}
+        />
+      </p>
+    )
+  }
   <h1>{organization.data.orgTitle}</h1>
   <p>{organization.data.orgDescription}</p>
 

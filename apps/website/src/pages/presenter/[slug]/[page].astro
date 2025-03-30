@@ -18,9 +18,14 @@ const { page, presenter } = Astro.props;
 
 <div>
   <h1>{presenter.data.presenterName}</h1>
-  <p>
-    <img src={presenter.data.imageUrl} alt={presenter.data.presenterName} />
-  </p>
+  {
+    presenter.data.imageUrl && (
+      <p>
+        <img src={presenter.data.imageUrl} alt={presenter.data.presenterName} />
+      </p>
+    )
+  }
+
   {presenter.data.presenterByline && <h2>{presenter.data.presenterByline}</h2>}
   <p>{presenter.data.presenterDescription}</p>
 
