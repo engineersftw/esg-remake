@@ -18,10 +18,8 @@ const { page } = Astro.props;
         <a href={`/presenter/${presenter.id}`}>
           {presenter.data.presenterName}
         </a>
-        {presenter.data.presenterByline ? (
+        {presenter.data.presenterByline && (
           <p>{presenter.data.presenterByline}</p>
-        ) : (
-          ""
         )}
       </li>
     ))

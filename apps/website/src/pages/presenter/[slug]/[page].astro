@@ -21,13 +21,7 @@ const { page, presenter } = Astro.props;
   <p>
     <img src={presenter.data.imageUrl} alt={presenter.data.presenterName} />
   </p>
-  {
-    presenter.data.presenterByline ? (
-      <h2>{presenter.data.presenterByline}</h2>
-    ) : (
-      ""
-    )
-  }
+  {presenter.data.presenterByline && <h2>{presenter.data.presenterByline}</h2>}
   <p>{presenter.data.presenterDescription}</p>
 
   <h2>Videos ({page.total})</h2>
