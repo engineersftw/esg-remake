@@ -1,0 +1,32 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths({ paginate }) {
+  const presenters = await getCollection("presenter");
+  return paginate(presenters, { pageSize: 50 });
+}
+
+const { page } = Astro.props;
+---
+
+<h1>Presenters</h1>
+
+<ul>
+  {
+    page.data.map((presenter) => (
+      <li>
+        <a href={`/presenter/${presenter.id}`}>
+          {presenter.data.presenterName}
+        </a>
+        {presenter.data.presenterByline && (
+          <p>{presenter.data.presenterByline}</p>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+{page.url.first ? <a href={page.url.first}>First</a> : null}
+{page.url.prev ? <a href={page.url.prev}>Previous</a> : null}
+{page.url.next ? <a href={page.url.next}>Next</a> : null}
+{page.url.last ? <a href={page.url.last}>Last</a> : null}

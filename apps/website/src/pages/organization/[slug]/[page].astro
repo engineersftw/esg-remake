@@ -1,0 +1,62 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths({ paginate }) {
+  const organizations = await getCollection("organization");
+
+  return organizations.flatMap((organization) => {
+    return paginate(organization.data.videos, {
+      params: { slug: organization.data.slug },
+      pageSize: 25,
+      props: { organization },
+    });
+  });
+}
+
+const { page, organization } = Astro.props;
+---
+
+<div>
+  {
+    organization.data.logoImage && (
+      <p>
+        <img
+          src={organization.data.logoImage}
+          alt={organization.data.orgTitle}
+        />
+      </p>
+    )
+  }
+  <h1>{organization.data.orgTitle}</h1>
+  <p>{organization.data.orgDescription}</p>
+
+  <h2>Videos ({page.total})</h2>
+  <ul>
+    {
+      page.data.map((video) => {
+        return (
+          <li>
+            <a href={`/v/${video.id}`}>
+              <img src={video.thumbnailMedium} alt={video.videoTitle} />
+            </a>
+            <h2>{video.videoTitle}</h2>
+            <p>{video.videoDescription}</p>
+          </li>
+        );
+      })
+    }
+  </ul>
+
+  <div>
+    {page.url.first ? <a href={page.url.first}>First</a> : null}
+    {page.url.prev ? <a href={page.url.prev}>Previous</a> : null}
+    {page.url.next ? <a href={page.url.next}>Next</a> : null}
+    {page.url.last ? <a href={page.url.last}>Last</a> : null}
+  </div>
+</div>
+
+<style>
+  p {
+    white-space: pre-line;
+  }
+</style>

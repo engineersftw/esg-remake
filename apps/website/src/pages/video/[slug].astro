@@ -1,0 +1,34 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const videos = await getCollection("video");
+  return videos.map((video) => ({
+    params: { slug: video.data.slug },
+    props: video,
+  }));
+}
+type Props = CollectionEntry<"video">;
+
+const video = Astro.props;
+---
+
+<div>
+  <h1>{video.data.videoTitle}</h1>
+  <iframe
+    width="560"
+    height="315"
+    src=`https://www.youtube.com/embed/${video.data.youtubeVideoId}`
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen></iframe>
+  <p>{video.data.videoDescription}</p>
+</div>
+
+<style>
+  p {
+    white-space: pre-line;
+  }
+</style>

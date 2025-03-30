@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths({ paginate }) {
+  const organizations = await getCollection("organization");
+  return paginate(organizations, { pageSize: 50 });
+}
+
+const { page } = Astro.props;
+---
+
+<h1>Organizations</h1>
+
+<ul>
+  {
+    page.data.map((organization) => (
+      <li>
+        <a href={`/organization/${organization.id}`}>
+          {organization.data.orgTitle}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+{page.url.first ? <a href={page.url.first}>First</a> : null}
+{page.url.prev ? <a href={page.url.prev}>Previous</a> : null}
+{page.url.next ? <a href={page.url.next}>Next</a> : null}
+{page.url.last ? <a href={page.url.last}>Last</a> : null}
