@@ -63,6 +63,7 @@ export const fetchAllVideos = async () => {
         thumbnailDefault: row["image1"],
         thumbnailMedium: row["image2"],
         thumbnailHigh: row["image3"],
+        slug: `${toSlug(row["title"])}--${row["id"]}`,
       });
     }
   }
@@ -96,7 +97,11 @@ export const fetchAllOrgs = async () => {
       )
       .eq("active", true)
       .range(range[0], range[1])
-      .order("title");
+      .order("title")
+      .order("created_at", {
+        ascending: false,
+        referencedTable: "video_presenters",
+      });
 
     if (error) {
       console.error("Error fetching data from Supabase:", error);
@@ -122,6 +127,7 @@ export const fetchAllOrgs = async () => {
                 thumbnailDefault: episode["image1"],
                 thumbnailMedium: episode["image2"],
                 thumbnailHigh: episode["image3"],
+                slug: `${toSlug(episode["title"])}--${episode["id"]}`,
               };
             }
           })
@@ -141,6 +147,87 @@ export const fetchAllOrgs = async () => {
         logoImage: row["image"],
         contactPerson: row["contact_person"],
         slug: actualSlug,
+        videos: videos,
+      });
+    }
+  }
+
+  return orgs;
+};
+
+export const fetchAllPresenters = async () => {
+  const { count, error: countError } = await supabase
+    .from("presenters")
+    .select("*", { count: "exact", head: true })
+    .eq("active", true);
+
+  if (countError) {
+    console.error("Error fetching count from Supabase:", countError);
+    throw countError;
+  }
+
+  const paginationRanges = breakIntoRanges(count!, 100);
+
+  const orgs = [];
+  for (const range of paginationRanges) {
+    const { data, error } = await supabase
+      .from("presenters")
+      .select(
+        `*,
+        orgVideos:video_presenters!presenter_id(
+          video:episodes!episode_id(*)
+        )
+        `
+      )
+      .eq("active", true)
+      .range(range[0], range[1])
+      .order("name")
+      .order("created_at", {
+        ascending: false,
+        referencedTable: "video_presenters",
+      });
+
+    if (error) {
+      console.error("Error fetching data from Supabase:", error);
+      throw error;
+    }
+
+    for (const row of data) {
+      let videos = [];
+      if (row.hasOwnProperty("orgVideos")) {
+        videos = row["orgVideos"]
+          .map((orgVideo: any) => {
+            const episode = orgVideo["video"];
+
+            if (episode["active"] === false) {
+              return null;
+            } else {
+              return {
+                id: `${episode["id"]}`,
+                youtubeVideoId: episode["video_id"],
+                videoTitle: episode["title"],
+                videoDescription: episode["description"],
+                pubDate: new Date(episode["published_at"]),
+                thumbnailDefault: episode["image1"],
+                thumbnailMedium: episode["image2"],
+                thumbnailHigh: episode["image3"],
+                slug: `${toSlug(episode["title"])}--${episode["id"]}`,
+              };
+            }
+          })
+          .filter((element: any) => element !== null);
+      }
+
+      orgs.push({
+        id: `${row["id"]}`,
+        presenterName: row["name"],
+        presenterDescription: row["biography"],
+        presenterByline: row["byline"],
+        twitter: row["twitter"],
+        email: row["email"],
+        website: row["website"],
+        imageUrl: row["avatar_url"],
+        slug: `${toSlug(row["name"])}--${row["id"]}`,
         videos: videos,
       });
     }

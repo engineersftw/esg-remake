@@ -17,18 +17,54 @@ async function test() {
   //   .limit(10)
   //   .order("created_at", { ascending: false });
 
+  // const { data, error } = await supabase
+  //   .from("organizations")
+  //   .select(
+  //     `*,
+  //     orgVideos:video_organizations!organization_id(
+  //       video:episodes!episode_id(*)
+  //     )
+  //     `
+  //   )
+  //   .eq("id", 70)
+  //   .limit(10)
+  //   .order("created_at", { ascending: false });
+
   const { data, error } = await supabase
-    .from("organizations")
+    .from("presenters")
     .select(
       `*,
-      orgVideos:video_organizations!organization_id(
+      orgVideos:video_presenters!presenter_id(
         video:episodes!episode_id(*)
       )
       `
     )
-    .eq("id", 70)
+    .eq("id", 21)
     .limit(10)
-    .order("created_at", { ascending: false });
+    .order("name")
+    .order("created_at", {
+      ascending: false,
+      referencedTable: "video_presenters",
+    });
+
+  // const { data, error } = await supabase
+  //   .from("presenters")
+  //   .select(
+  //     `*,
+  //     orgVideos:video_presenters!fk_rails_5f87853545(
+  //       video:episodes!episode_id(
+  //         *
+  //       )
+  //     )
+  //     `
+  //   )
+  //   .eq("id", 21)
+  //   .limit(10)
+  //   .order("name");
+  // .order("created_at", {
+  //   ascending: false,
+  //   referencedTable: "video_presenters",
+  // });
 
   if (error) {
     console.error("Error fetching data:", error);
