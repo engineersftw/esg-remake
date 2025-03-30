@@ -1,0 +1,23 @@
+{
+  "name": "esg-remake",
+  "version": "1.0.0",
+  "description": "[Engineers.SG](https://engineers.sg) is written in Ruby on Rails. However, it's a very old version and the data on the site has not changed in many years. I want to convert the site to a static website using a Static Site Generator. This is to save money.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/engineersftw/esg-remake.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/engineersftw/esg-remake/issues"
+  },
+  "homepage": "https://github.com/engineersftw/esg-remake#readme",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

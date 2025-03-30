@@ -1,0 +1,15 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const organizations = await getCollection("organization");
+  return organizations.map((organization) => ({
+    params: { slug: organization.data.slug },
+    props: organization,
+  }));
+}
+
+const { slug } = Astro.params;
+
+return Astro.rewrite(`/organization/${slug}/1`);
+---

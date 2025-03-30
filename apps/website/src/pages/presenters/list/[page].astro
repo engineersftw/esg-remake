@@ -1,0 +1,111 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseHead from "../../../components/BaseHead.astro";
+import Header from "../../../components/Header.astro";
+import Footer from "../../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
+
+export async function getStaticPaths({ paginate }) {
+  const presenters = await getCollection("presenter");
+  return paginate(presenters, { pageSize: 50 });
+}
+
+const { page } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      main {
+        width: 960px;
+      }
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      ul li {
+        width: calc(30% - 1rem);
+      }
+      ul li * {
+        text-decoration: none;
+        transition: 0.2s ease;
+      }
+      ul li a {
+        display: block;
+      }
+      .title {
+        margin: 0;
+        color: rgb(var(--black));
+        line-height: 1;
+      }
+      .date {
+        margin: 0;
+        color: rgb(var(--gray));
+      }
+      ul li a:hover h4,
+      ul li a:hover .date {
+        color: rgb(var(--accent));
+      }
+      .orgImage {
+        width: auto;
+        min-height: 250px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
+        transition: 0.2s ease;
+      }
+
+      .orgImage:hover {
+        box-shadow: var(--box-shadow);
+      }
+      @media (max-width: 720px) {
+        ul {
+          gap: 0.5em;
+        }
+        ul li {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <h1>Presenters</h1>
+      <section>
+        <ul>
+          {
+            page.data.map((presenter) => (
+              <li>
+                <a href={`/presenter/${presenter.id}`}>
+                  <div
+                    class="orgImage"
+                    style={`background-image: url(${presenter.data.imageUrl});`}
+                  />
+                  <h4 class="title">{presenter.data.presenterName}</h4>
+                </a>
+                {presenter.data.presenterByline && (
+                  <p>{presenter.data.presenterByline}</p>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+      {page.url.first ? <a href={page.url.first}>First</a> : null}
+      {page.url.prev ? <a href={page.url.prev}>Previous</a> : null}
+      {page.url.next ? <a href={page.url.next}>Next</a> : null}
+      {page.url.last ? <a href={page.url.last}>Last</a> : null}
+    </main>
+    <Footer />
+  </body>
+</html>

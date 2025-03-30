@@ -1,0 +1,16 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const videos = await getCollection("video");
+  return videos.map((video) => ({
+    params: { id: video.id },
+    props: video,
+  }));
+}
+type Props = CollectionEntry<"video">;
+
+const video = Astro.props;
+
+return Astro.redirect(`/video/${video.data.slug}`, 301);
+---
