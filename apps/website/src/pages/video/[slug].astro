@@ -1,5 +1,10 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import FormattedDate from "../../components/FormattedDate.astro";
 
 export async function getStaticPaths() {
   const videos = await getCollection("video");
@@ -13,22 +18,81 @@ type Props = CollectionEntry<"video">;
 const video = Astro.props;
 ---
 
-<div>
-  <h1>{video.data.videoTitle}</h1>
-  <iframe
-    width="560"
-    height="315"
-    src=`https://www.youtube.com/embed/${video.data.youtubeVideoId}`
-    title="YouTube video player"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    referrerpolicy="strict-origin-when-cross-origin"
-    allowfullscreen></iframe>
-  <p>{video.data.videoDescription}</p>
-</div>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      main {
+        width: calc(100% - 2em);
+        max-width: 100%;
+        margin: 0;
+      }
+      .hero-image {
+        width: 100%;
+      }
+      .hero-image iframe {
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+      }
+      .prose {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 1em;
+        color: rgb(var(--gray-dark));
+      }
+      .title {
+        margin-bottom: 1em;
+        padding: 1em 0;
+        text-align: center;
+        line-height: 1;
+      }
+      .title h1 {
+        margin: 0 0 0.5em 0;
+      }
+      .date {
+        margin-bottom: 0.5em;
+        color: rgb(var(--gray));
+      }
+      .last-updated-on {
+        font-style: italic;
+      }
 
-<style>
-  p {
-    white-space: pre-line;
-  }
-</style>
+      .videoDescr {
+        white-space: pre-line;
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+    <main>
+      <article>
+        <div class="hero-image">
+          <iframe
+            width="720"
+            height="480"
+            src=`https://www.youtube.com/embed/${video.data.youtubeVideoId}`
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+        </div>
+        <div class="prose">
+          <div class="title">
+            <div class="date">
+              <FormattedDate date={video.data.pubDate} />
+            </div>
+            <h1>{video.data.videoTitle}</h1>
+            <hr />
+          </div>
+          <p class="videoDescr">{video.data.videoDescription}</p>
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
