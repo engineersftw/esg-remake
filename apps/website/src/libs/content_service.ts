@@ -140,7 +140,9 @@ export const fetchAllOrgs = async () => {
 
       const imageUrl = row["image"]
         ? row["image"]
-        : "https://picsum.photos/300/300";
+        : `https://avatar.iran.liara.run/username?username=${encodeURI(
+            row["title"]
+          )}`;
 
       orgs.push({
         id: `${row["id"]}`,
