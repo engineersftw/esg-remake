@@ -9,5 +9,10 @@ export default defineConfig({
   integrations: [mdx(), sitemap()],
   redirects: {
     "/episodes": "/videos",
+    "/organizations/[id]": "/organization/[id]",
+    "/org/[id]": "/organization/[id]",
+    "/o/[id]": "/organization/[id]",
+    "/presenters/[id]": "/presenter/[id]",
+    "/s/[id]": "/presenter/[id]",
   },
 });
