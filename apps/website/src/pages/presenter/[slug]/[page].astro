@@ -1,0 +1,61 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths({ paginate }) {
+  const presenters = await getCollection("presenter");
+
+  return presenters.flatMap((presenter) => {
+    return paginate(presenter.data.videos, {
+      params: { slug: presenter.data.slug },
+      pageSize: 25,
+      props: { presenter },
+    });
+  });
+}
+
+const { page, presenter } = Astro.props;
+---
+
+<div>
+  <h1>{presenter.data.presenterName}</h1>
+  {
+    presenter.data.imageUrl && (
+      <p>
+        <img src={presenter.data.imageUrl} alt={presenter.data.presenterName} />
+      </p>
+    )
+  }
+
+  {presenter.data.presenterByline && <h2>{presenter.data.presenterByline}</h2>}
+  <p>{presenter.data.presenterDescription}</p>
+
+  <h2>Videos ({page.total})</h2>
+  <ul>
+    {
+      page.data.map((video) => {
+        return (
+          <li>
+            <a href={`/v/${video.id}`}>
+              <img src={video.thumbnailMedium} alt={video.videoTitle} />
+            </a>
+            <h2>{video.videoTitle}</h2>
+            <p>{video.videoDescription}</p>
+          </li>
+        );
+      })
+    }
+  </ul>
+
+  <div>
+    {page.url.first ? <a href={page.url.first}>First</a> : null}
+    {page.url.prev ? <a href={page.url.prev}>Previous</a> : null}
+    {page.url.next ? <a href={page.url.next}>Next</a> : null}
+    {page.url.last ? <a href={page.url.last}>Last</a> : null}
+  </div>
+</div>
+
+<style>
+  p {
+    white-space: pre-line;
+  }
+</style>
