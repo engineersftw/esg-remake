@@ -222,6 +222,12 @@ export const fetchAllPresenters = async () => {
           .filter((element: any) => element !== null);
       }
 
+      const avatarUrl = row["avatar_url"]
+        ? row["avatar_url"]
+        : `https://avatar.iran.liara.run/username?username=${encodeURI(
+            row["name"]
+          )}`;
+
       orgs.push({
         id: `${row["id"]}`,
         presenterName: row["name"],
@@ -230,7 +236,7 @@ export const fetchAllPresenters = async () => {
         twitter: row["twitter"],
         email: row["email"],
         website: row["website"],
-        imageUrl: row["avatar_url"],
+        imageUrl: avatarUrl,
         slug: `${toSlug(row["name"])}--${row["id"]}`,
         videos: videos,
       });
