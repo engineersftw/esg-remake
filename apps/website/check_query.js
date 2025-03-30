@@ -34,13 +34,13 @@ async function test() {
     .from("presenters")
     .select(
       `*,
-      orgVideos:video_presenters!presenter_id(
-        video:episodes!episode_id(*)
-      )
-      `
+        orgVideos:video_presenters!presenter_id(
+          video:episodes!episode_id(*)
+        )
+        `
     )
-    .eq("id", 21)
-    .limit(10)
+    .eq("active", true)
+    // .range(range[0], range[1])
     .order("name")
     .order("created_at", {
       ascending: false,

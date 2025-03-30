@@ -1,6 +1,5 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import { toSlug } from "../../helpers/url_helpers";
 
 export async function getStaticPaths() {
   const videos = await getCollection("video");
@@ -13,8 +12,5 @@ type Props = CollectionEntry<"video">;
 
 const video = Astro.props;
 
-return Astro.redirect(
-  `/video/${toSlug(video.data.videoTitle)}--${video.id}`,
-  301
-);
+return Astro.redirect(`/video/${video.data.slug}`, 301);
 ---

@@ -1,11 +1,10 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
-import { toSlug } from "../../helpers/url_helpers";
 
 export async function getStaticPaths() {
   const videos = await getCollection("video");
   return videos.map((video) => ({
-    params: { title: toSlug(video.data.videoTitle), id: video.id },
+    params: { slug: video.data.slug },
     props: video,
   }));
 }

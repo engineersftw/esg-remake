@@ -1,0 +1,15 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const presenters = await getCollection("presenter");
+  return presenters.map((presenter) => ({
+    params: { id: presenter.id },
+    props: presenter,
+  }));
+}
+
+const presenter = Astro.props;
+
+return Astro.redirect(`/presenter/${presenter.data.slug}`, 301);
+---

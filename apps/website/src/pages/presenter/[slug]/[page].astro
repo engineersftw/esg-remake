@@ -2,24 +2,33 @@
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths({ paginate }) {
-  const organizations = await getCollection("organization");
+  const presenters = await getCollection("presenter");
 
-  return organizations.flatMap((organization) => {
-    return paginate(organization.data.videos, {
-      params: { slug: organization.data.slug },
+  return presenters.flatMap((presenter) => {
+    return paginate(presenter.data.videos, {
+      params: { slug: presenter.data.slug },
       pageSize: 25,
-      props: { organization },
+      props: { presenter },
     });
   });
 }
 
-const { page, organization } = Astro.props;
+const { page, presenter } = Astro.props;
 ---
 
 <div>
-  <img src={organization.data.logoImage} alt={organization.data.orgTitle} />
-  <h1>{organization.data.orgTitle}</h1>
-  <p>{organization.data.orgDescription}</p>
+  <h1>{presenter.data.presenterName}</h1>
+  <p>
+    <img src={presenter.data.imageUrl} alt={presenter.data.presenterName} />
+  </p>
+  {
+    presenter.data.presenterByline ? (
+      <h2>{presenter.data.presenterByline}</h2>
+    ) : (
+      ""
+    )
+  }
+  <p>{presenter.data.presenterDescription}</p>
 
   <h2>Videos ({page.total})</h2>
   <ul>

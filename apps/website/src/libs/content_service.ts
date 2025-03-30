@@ -100,7 +100,7 @@ export const fetchAllOrgs = async () => {
       .order("title")
       .order("created_at", {
         ascending: false,
-        referencedTable: "video_presenters",
+        referencedTable: "video_organizations",
       });
 
     if (error) {

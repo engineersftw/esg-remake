@@ -2,24 +2,27 @@
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths({ paginate }) {
-  const videos = await getCollection("video");
-  return paginate(videos, { pageSize: 50 });
+  const presenters = await getCollection("presenter");
+  return paginate(presenters, { pageSize: 50 });
 }
 
 const { page } = Astro.props;
 ---
 
-<h1>Videos</h1>
+<h1>Presenters</h1>
 
 <ul>
   {
-    page.data.map((video) => (
+    page.data.map((presenter) => (
       <li>
-        <a href={`/v/${video.id}`}>
-          <img src={video.data.thumbnailMedium} alt={video.data.videoTitle} />
+        <a href={`/presenter/${presenter.id}`}>
+          {presenter.data.presenterName}
         </a>
-        <h2>{video.data.videoTitle}</h2>
-        <p>{video.data.videoDescription}</p>
+        {presenter.data.presenterByline ? (
+          <p>{presenter.data.presenterByline}</p>
+        ) : (
+          ""
+        )}
       </li>
     ))
   }
