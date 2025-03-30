@@ -1,6 +1,12 @@
 ---
 import { getCollection } from "astro:content";
 
+import BaseHead from "../../../components/BaseHead.astro";
+import Header from "../../../components/Header.astro";
+import Footer from "../../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
+import FormattedDate from "../../../components/FormattedDate.astro";
+
 export async function getStaticPaths({ paginate }) {
   const presenters = await getCollection("presenter");
 
@@ -16,46 +22,154 @@ export async function getStaticPaths({ paginate }) {
 const { page, presenter } = Astro.props;
 ---
 
-<div>
-  <h1>{presenter.data.presenterName}</h1>
-  {
-    presenter.data.imageUrl && (
-      <p>
-        <img src={presenter.data.imageUrl} alt={presenter.data.presenterName} />
-      </p>
-    )
-  }
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      main {
+        width: 960px;
+      }
+      .hero-image {
+        width: 100%;
+      }
+      .hero-image img {
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+      }
+      .prose {
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 1em;
+        color: rgb(var(--gray-dark));
+      }
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      ul li {
+        width: calc(50% - 1rem);
+      }
+      ul li * {
+        text-decoration: none;
+        transition: 0.2s ease;
+      }
+      ul li:first-child {
+        width: 100%;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+      ul li:first-child img {
+        width: 100%;
+      }
+      ul li:first-child .title {
+        font-size: 2.369rem;
+      }
+      ul li img {
+        margin-bottom: 0.5rem;
+        border-radius: 12px;
+      }
+      ul li a {
+        display: block;
+      }
+      .title {
+        margin: 0;
+        color: rgb(var(--black));
+        line-height: 1;
+      }
+      .date {
+        margin: 0;
+        color: rgb(var(--gray));
+      }
+      ul li a:hover h4,
+      ul li a:hover .date {
+        color: rgb(var(--accent));
+      }
+      ul a:hover img {
+        box-shadow: var(--box-shadow);
+      }
+      .presenterDescr {
+        white-space: pre-line;
+      }
+      @media (max-width: 720px) {
+        ul {
+          gap: 0.5em;
+        }
+        ul li {
+          width: 100%;
+          text-align: center;
+        }
+        ul li:first-child {
+          margin-bottom: 0;
+        }
+        ul li:first-child .title {
+          font-size: 1.563em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <article>
+        {
+          presenter.data.imageUrl && (
+            <div class="hero-image">
+              <img
+                src={presenter.data.imageUrl}
+                alt={presenter.data.presenterName}
+              />
+            </div>
+          )
+        }
+        <div class="prose">
+          <div class="title">
+            <h1>{presenter.data.presenterName}</h1>
+            <hr />
+          </div>
 
-  {presenter.data.presenterByline && <h2>{presenter.data.presenterByline}</h2>}
-  <p>{presenter.data.presenterDescription}</p>
+          {
+            presenter.data.presenterByline && (
+              <h4>{presenter.data.presenterByline}</h4>
+            )
+          }
+          <p class="presenterDescr">{presenter.data.presenterDescription}</p>
+        </div>
 
-  <h2>Videos ({page.total})</h2>
-  <ul>
-    {
-      page.data.map((video) => {
-        return (
-          <li>
-            <a href={`/v/${video.id}`}>
-              <img src={video.thumbnailMedium} alt={video.videoTitle} />
-            </a>
-            <h2>{video.videoTitle}</h2>
-            <p>{video.videoDescription}</p>
-          </li>
-        );
-      })
-    }
-  </ul>
-
-  <div>
-    {page.url.first ? <a href={page.url.first}>First</a> : null}
-    {page.url.prev ? <a href={page.url.prev}>Previous</a> : null}
-    {page.url.next ? <a href={page.url.next}>Next</a> : null}
-    {page.url.last ? <a href={page.url.last}>Last</a> : null}
-  </div>
-</div>
-
-<style>
-  p {
-    white-space: pre-line;
-  }
-</style>
+        <h2>Videos ({page.total})</h2>
+        <section>
+          <ul>
+            {
+              page.data.map((video) => (
+                <li>
+                  <a href={`/v/${video.id}/`}>
+                    <img
+                      width={720}
+                      height={360}
+                      src={video.thumbnailMedium}
+                      alt={video.videoTitle}
+                    />
+                    <h4 class="title">{video.videoTitle}</h4>
+                    <p class="date">
+                      <FormattedDate date={video.pubDate} />
+                    </p>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+        {page.url.first ? <a href={page.url.first}>First</a> : null}
+        {page.url.prev ? <a href={page.url.prev}>Previous</a> : null}
+        {page.url.next ? <a href={page.url.next}>Next</a> : null}
+        {page.url.last ? <a href={page.url.last}>Last</a> : null}
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
