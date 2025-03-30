@@ -138,13 +138,17 @@ export const fetchAllOrgs = async () => {
         ? row["slug"]
         : `${toSlug(row["title"])}--${row["id"]}`;
 
+      const imageUrl = row["image"]
+        ? row["image"]
+        : "https://picsum.photos/300/300";
+
       orgs.push({
         id: `${row["id"]}`,
         orgTitle: row["title"],
         orgDescription: row["description"],
         website: row["website"],
         twitter: row["twitter"],
-        logoImage: row["image"],
+        logoImage: imageUrl,
         contactPerson: row["contact_person"],
         slug: actualSlug,
         videos: videos,
