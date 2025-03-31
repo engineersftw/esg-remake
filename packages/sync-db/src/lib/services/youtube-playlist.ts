@@ -2,40 +2,13 @@
 
 import 'dotenv/config';
 import { youtube_v3 } from '@googleapis/youtube';
+import { ESGPlaylistDetails, ESGVideoItem } from '../types';
 
 const recordsPerPage = 100;
 
 const youtube = new youtube_v3.Youtube({
   auth: process.env['YOUTUBE_API_KEY'],
 });
-
-export type ESGPlaylistDetails = {
-  playlistId: string;
-  publishedAt: string;
-  channelId: string;
-  channelTitle: string;
-  title: string;
-  description: string;
-  thumbnailDefault?: string;
-  thumbnailMedium?: string;
-  thumbnailHigh?: string;
-  thumbnailStandard?: string;
-  thumbnailMaxres?: string;
-};
-
-export type ESGVideoItem = {
-  videoId: string;
-  videoTitle: string;
-  videoDescription: string;
-  publishedAt: string;
-  channelId: string;
-  channelTitle: string;
-  thumbnailDefault?: string;
-  thumbnailMedium?: string;
-  thumbnailHigh?: string;
-  thumbnailStandard?: string;
-  thumbnailMaxres?: string;
-};
 
 export const fetchPlaylistDetails = async (
   playlistId: string
@@ -59,8 +32,8 @@ export const fetchPlaylistDetails = async (
       publishedAt: `${playlistSnippet.publishedAt}`,
       channelId: `${playlistSnippet.channelId}`,
       channelTitle: `${playlistSnippet.channelTitle}`,
-      title: `${playlistSnippet.title}`,
-      description: `${playlistSnippet.description}`,
+      playlistTitle: `${playlistSnippet.title}`,
+      playlistDescription: `${playlistSnippet.description}`,
       thumbnailDefault: `${playlistSnippet?.thumbnails?.default?.url}`,
       thumbnailMedium: `${playlistSnippet?.thumbnails?.medium?.url}`,
       thumbnailHigh: `${playlistSnippet?.thumbnails?.high?.url}`,
