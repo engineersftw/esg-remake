@@ -1,10 +1,12 @@
 {
-  "name": "sync-db",
+  "name": "@engineersftw/sync-db",
   "version": "0.0.1",
-  "private": true,
   "type": "module",
-  "main": "./index.js",
-  "types": "./index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
   "dependencies": {
     "@googleapis/youtube": "^24.0.0",
     "@supabase/supabase-js": "^2.49.3",

@@ -9,10 +9,10 @@ install-dependencies: ## Install dependencies
 	npm install
 
 test: ## Run tests
-	./nx run-many --target=test --projects=esg-website --projects=sync-db
+	./nx run-many --target=test --projects=esg-website --projects=@engineersftw/sync-db
 
 test-sync: ## Tests the data sync package
-	./nx run sync-db:test
+	./nx run @engineersftw/sync-db:test
 
 run: ## Run the Astro project
 	./nx run esg-website:dev

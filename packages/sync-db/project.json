@@ -1,5 +1,5 @@
 {
-  "name": "sync-db",
+  "name": "@engineersftw/sync-db",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/sync-db/src",
   "projectType": "library",
