@@ -1,0 +1,13 @@
+{
+  "name": "sync-db",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "dependencies": {
+    "@googleapis/youtube": "^24.0.0",
+    "@supabase/supabase-js": "^2.49.3",
+    "dotenv": "^16.4.7"
+  }
+}
