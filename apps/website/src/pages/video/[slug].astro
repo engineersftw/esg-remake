@@ -5,6 +5,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import FormattedDate from '../../components/FormattedDate.astro';
+import { YouTube } from 'astro-embed';
 
 export async function getStaticPaths() {
   const videos = await getCollection('video');
@@ -30,11 +31,12 @@ const video = Astro.props;
       .hero-image {
         width: 100%;
       }
-      .hero-image iframe {
+      .hero-image lite-youtube {
         display: block;
         margin: 0 auto;
         border-radius: 12px;
         box-shadow: var(--box-shadow);
+        text-align: center;
       }
       .prose {
         width: 720px;
@@ -71,15 +73,7 @@ const video = Astro.props;
     <main>
       <article>
         <div class="hero-image">
-          <iframe
-            width="720"
-            height="480"
-            src=`https://www.youtube.com/embed/${video.data.videoId}`
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen></iframe>
+          <YouTube id={video.data.videoId} posterQuality="max" />
         </div>
         <div class="prose">
           <div class="title">
