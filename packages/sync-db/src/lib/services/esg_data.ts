@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import supabase from './supabase';
 import { toSlug } from '../helpers/url_helpers';
-import { ESGPlaylistDetails, ESGVideoItem } from '../types';
+import {
+  ESGPlaylistDetails,
+  ESGVideoItem,
+  ESGOrganization,
+  ESGPresenter,
+} from '../types';
 
 const breakIntoRanges = (number: number, rangeSize = 50) => {
   if (typeof number !== 'number' || number < 0 || !Number.isInteger(number)) {
@@ -28,7 +33,233 @@ const breakIntoRanges = (number: number, rangeSize = 50) => {
   return ranges;
 };
 
-export const fetchPlaylists = async (): Promise<ESGPlaylistDetails[]> => {
+const fetchESGAllVideos = async (): Promise<ESGVideoItem[]> => {
+  const { count, error: countError } = await supabase
+    .from('episodes')
+    .select('*', { count: 'exact', head: true })
+    .eq('active', true);
+
+  if (countError) {
+    console.error('Error fetching count from Supabase:', countError);
+    throw countError;
+  }
+
+  const paginationRanges = breakIntoRanges(count!, 100);
+
+  const videos: ESGVideoItem[] = [];
+  for (const range of paginationRanges) {
+    const { data, error } = await supabase
+      .from('episodes')
+      .select()
+      .eq('active', true)
+      .range(range[0], range[1])
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching data from Supabase:', error);
+      throw error;
+    }
+
+    for (const row of data) {
+      videos.push({
+        id: `${row['id']}`,
+        videoId: row['video_id'],
+        videoTitle: row['title'],
+        videoDescription: row['description'],
+        publishedAt: row['published_at'],
+        thumbnailDefault: row['image1'],
+        thumbnailMedium: row['image2'],
+        thumbnailHigh: row['image3'],
+        slug: `${toSlug(row['title'])}--${row['id']}`,
+      });
+    }
+  }
+
+  return videos;
+};
+
+const fetchESGAllOrgs = async (): Promise<ESGOrganization[]> => {
+  const { count, error: countError } = await supabase
+    .from('organizations')
+    .select('*', { count: 'exact', head: true })
+    .eq('active', true);
+
+  if (countError) {
+    console.error('Error fetching count from Supabase:', countError);
+    throw countError;
+  }
+
+  const paginationRanges = breakIntoRanges(count!, 100);
+
+  const orgs: ESGOrganization[] = [];
+  for (const range of paginationRanges) {
+    const { data, error } = await supabase
+      .from('organizations')
+      .select(
+        `*,
+      orgVideos:video_organizations!organization_id(
+        video:episodes!episode_id(*)
+      )
+      `
+      )
+      .eq('active', true)
+      .range(range[0], range[1])
+      .order('title')
+      .order('created_at', {
+        ascending: false,
+        referencedTable: 'video_organizations',
+      });
+
+    if (error) {
+      console.error('Error fetching data from Supabase:', error);
+      throw error;
+    }
+
+    for (const row of data) {
+      let videos = [];
+      if (Object.prototype.hasOwnProperty.call(row, 'orgVideos')) {
+        videos = row['orgVideos']
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((orgVideo: any) => {
+            const episode = orgVideo['video'];
+
+            if (episode['active'] === false) {
+              return null;
+            } else {
+              return {
+                id: `${episode['id']}`,
+                videoId: episode['video_id'],
+                videoTitle: episode['title'],
+                videoDescription: episode['description'],
+                publishedAt: episode['published_at'],
+                thumbnailDefault: episode['image1'],
+                thumbnailMedium: episode['image2'],
+                thumbnailHigh: episode['image3'],
+                slug: `${toSlug(episode['title'])}--${episode['id']}`,
+              };
+            }
+          })
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .filter((element: any) => element !== null);
+      }
+
+      const actualSlug = row['slug']
+        ? row['slug']
+        : `${toSlug(row['title'])}--${row['id']}`;
+
+      const imageUrl = row['image']
+        ? row['image']
+        : `https://avatar.iran.liara.run/username?username=${encodeURI(
+            row['title']
+          )}`;
+
+      orgs.push({
+        id: `${row['id']}`,
+        orgTitle: row['title'],
+        orgDescription: row['description'],
+        website: row['website'],
+        twitter: row['twitter'],
+        logoImage: imageUrl,
+        contactPerson: row['contact_person'],
+        slug: actualSlug,
+        videos: videos,
+      });
+    }
+  }
+
+  return orgs;
+};
+
+const fetchESGAllPresenters = async (): Promise<ESGPresenter[]> => {
+  const { count, error: countError } = await supabase
+    .from('presenters')
+    .select('*', { count: 'exact', head: true })
+    .eq('active', true);
+
+  if (countError) {
+    console.error('Error fetching count from Supabase:', countError);
+    throw countError;
+  }
+
+  const paginationRanges = breakIntoRanges(count!, 100);
+
+  const presenters: ESGPresenter[] = [];
+  for (const range of paginationRanges) {
+    const { data, error } = await supabase
+      .from('presenters')
+      .select(
+        `*,
+        orgVideos:video_presenters!presenter_id(
+          video:episodes!episode_id(*)
+        )
+        `
+      )
+      .eq('active', true)
+      .range(range[0], range[1])
+      .order('name')
+      .order('created_at', {
+        ascending: false,
+        referencedTable: 'video_presenters',
+      });
+
+    if (error) {
+      console.error('Error fetching data from Supabase:', error);
+      throw error;
+    }
+
+    for (const row of data) {
+      let videos = [];
+      if (Object.prototype.hasOwnProperty.call(row, 'orgVideos')) {
+        videos = row['orgVideos']
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .map((orgVideo: any) => {
+            const episode = orgVideo['video'];
+
+            if (episode['active'] === false) {
+              return null;
+            } else {
+              return {
+                id: `${episode['id']}`,
+                videoId: episode['video_id'],
+                videoTitle: episode['title'],
+                videoDescription: episode['description'],
+                publishedAt: episode['published_at'],
+                thumbnailDefault: episode['image1'],
+                thumbnailMedium: episode['image2'],
+                thumbnailHigh: episode['image3'],
+                slug: `${toSlug(episode['title'])}--${episode['id']}`,
+              };
+            }
+          })
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .filter((element: any) => element !== null);
+      }
+
+      const avatarUrl = row['avatar_url']
+        ? row['avatar_url']
+        : `https://avatar.iran.liara.run/username?username=${encodeURI(
+            row['name']
+          )}`;
+
+      presenters.push({
+        id: `${row['id']}`,
+        presenterName: row['name'],
+        presenterDescription: row['biography'],
+        presenterByline: row['byline'],
+        twitter: row['twitter'],
+        email: row['email'],
+        website: row['website'],
+        imageUrl: avatarUrl,
+        slug: `${toSlug(row['name'])}--${row['id']}`,
+        videos: videos,
+      });
+    }
+  }
+
+  return presenters;
+};
+
+const fetchESGAllPlaylists = async (): Promise<ESGPlaylistDetails[]> => {
   const { count, error: countError } = await supabase
     .from('playlists')
     .select('*', { count: 'exact', head: true })
@@ -74,7 +305,7 @@ export const fetchPlaylists = async (): Promise<ESGPlaylistDetails[]> => {
   return videos;
 };
 
-export const updatePlaylist = async (
+const updateESGPlaylist = async (
   playlistId: string,
   playlistDetails: ESGPlaylistDetails,
   playlistItems?: ESGVideoItem[]
@@ -170,4 +401,12 @@ export const updatePlaylist = async (
     playlistItemsRecord,
     playlistItemsJoinTableRecord,
   };
+};
+
+export {
+  fetchESGAllVideos,
+  fetchESGAllOrgs,
+  fetchESGAllPresenters,
+  fetchESGAllPlaylists,
+  updateESGPlaylist,
 };

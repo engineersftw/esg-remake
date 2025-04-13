@@ -1,6 +1,6 @@
 'use strict';
 
-import 'dotenv/config';
+// import 'dotenv/config';
 import { youtube_v3 } from '@googleapis/youtube';
 import { ESGPlaylistDetails, ESGVideoItem } from '../types';
 
@@ -10,7 +10,7 @@ const youtube = new youtube_v3.Youtube({
   auth: process.env['YOUTUBE_API_KEY'],
 });
 
-export const fetchPlaylistDetails = async (
+const fetchYTPlaylistDetails = async (
   playlistId: string
 ): Promise<ESGPlaylistDetails> => {
   try {
@@ -46,7 +46,7 @@ export const fetchPlaylistDetails = async (
   }
 };
 
-const fetchPlaylistItems = async (
+const fetchYTPlaylistItems = async (
   playlistId: string,
   nextPageToken = ''
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,7 +65,7 @@ const fetchPlaylistItems = async (
   }
 };
 
-export const fetchFullPlaylist = async (
+const fetchYTFullPlaylist = async (
   playlistId: string
 ): Promise<ESGVideoItem[]> => {
   const result: ESGVideoItem[] = [];
@@ -75,7 +75,7 @@ export const fetchFullPlaylist = async (
   let currPage = 1;
   while (hasNextPage) {
     console.log(`Fetching Page ${currPage++}`);
-    const playlistItems = await fetchPlaylistItems(playlistId, nextPageToken);
+    const playlistItems = await fetchYTPlaylistItems(playlistId, nextPageToken);
 
     for (const item of playlistItems.items) {
       result.push({
@@ -102,3 +102,5 @@ export const fetchFullPlaylist = async (
 
   return result;
 };
+
+export { fetchYTPlaylistDetails, fetchYTFullPlaylist };
