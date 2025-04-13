@@ -19,6 +19,31 @@ const video = defineCollection({
     thumbnailMedium: z.string().nullable(),
     thumbnailHigh: z.string().nullable(),
     slug: z.string(),
+    organizations: z.array(
+      z.object({
+        id: z.string(),
+        orgTitle: z.string(),
+        orgDescription: z.string().nullable(),
+        website: z.string().nullable(),
+        twitter: z.string().nullable(),
+        logoImage: z.string().nullable(),
+        contactPerson: z.string().nullable(),
+        slug: z.string(),
+      })
+    ),
+    presenters: z.array(
+      z.object({
+        id: z.string(),
+        presenterName: z.string(),
+        presenterDescription: z.string().nullable(),
+        presenterByline: z.string().nullable(),
+        twitter: z.string().nullable(),
+        email: z.string().nullable(),
+        website: z.string().nullable(),
+        imageUrl: z.string().nullable(),
+        slug: z.string(),
+      })
+    ),
   }),
 });
 

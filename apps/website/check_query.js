@@ -66,6 +66,22 @@ async function test() {
   //   referencedTable: "video_presenters",
   // });
 
+  const { data, error } = await supabase
+    .from('episodes')
+    .select(
+      `*,
+      videoOrgs:video_organizations!episode_id(
+        organization:organizations!organization_id(*)
+      ),
+      videoPresenters:video_presenters!episode_id(
+        presenter:presenters!presenter_id(*)
+      )
+      `
+    )
+    .eq('active', true)
+    .range(0, 10)
+    .order('created_at', { ascending: false });
+
   if (error) {
     console.error('Error fetching data:', error);
   } else {

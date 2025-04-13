@@ -65,6 +65,16 @@ const video = Astro.props;
       .videoDescr {
         white-space: pre-line;
       }
+
+      h5 a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: rgb(var(--gray-dark));
+      }
+      h5 a:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
 
@@ -84,6 +94,60 @@ const video = Astro.props;
             <hr />
           </div>
           <p class="videoDescr">{video.data.videoDescription}</p>
+
+          {video.data.organizations.length > 0 && <h4>Organizations</h4>}
+          <ul>
+            {
+              video.data.organizations.map((org) => (
+                <li key={org.id}>
+                  <h5>
+                    <a
+                      href={`/organization/${org.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={org.logoImage}
+                        alt={org.orgTitle}
+                        width={100}
+                        height={100}
+                        loading="lazy"
+                      />
+                      &nbsp;
+                      {org.orgTitle}
+                    </a>
+                  </h5>
+                </li>
+              ))
+            }
+          </ul>
+
+          {video.data.presenters.length > 0 && <h4>Presenters</h4>}
+          <ul>
+            {
+              video.data.presenters.map((person) => (
+                <li key={person.id}>
+                  <h5>
+                    <a
+                      href={`/presenter/${person.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={person.imageUrl}
+                        alt={person.presenterName}
+                        width={100}
+                        height={100}
+                        loading="lazy"
+                      />
+                      &nbsp;
+                      {person.presenterName}
+                    </a>
+                  </h5>
+                </li>
+              ))
+            }
+          </ul>
         </div>
       </article>
     </main>

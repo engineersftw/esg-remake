@@ -43,7 +43,16 @@ export const fetchAllVideos = async () => {
   for (const range of paginationRanges) {
     const { data, error } = await supabase
       .from('episodes')
-      .select()
+      .select(
+        `*,
+      videoOrgs:video_organizations!episode_id(
+        organization:organizations!organization_id(*)
+      ),
+      videoPresenters:video_presenters!episode_id(
+        presenter:presenters!presenter_id(*)
+      )
+      `
+      )
       .eq('active', true)
       .range(range[0], range[1])
       .order('created_at', { ascending: false });
@@ -54,6 +63,64 @@ export const fetchAllVideos = async () => {
     }
 
     for (const row of data) {
+      const organizations = [];
+      const presenters = [];
+
+      if (Object.prototype.hasOwnProperty.call(row, 'videoOrgs')) {
+        organizations.push(
+          ...row['videoOrgs'].map((org: any) => {
+            const organization = org['organization'];
+
+            const actualSlug = organization['slug']
+              ? organization['slug']
+              : `${toSlug(organization['title'])}--${organization['id']}`;
+
+            const imageUrl = organization['image']
+              ? organization['image']
+              : `https://avatar.iran.liara.run/username?username=${encodeURI(
+                  organization['title']
+                )}`;
+
+            return {
+              id: `${organization['id']}`,
+              orgTitle: organization['title'],
+              orgDescription: organization['description'],
+              website: organization['website'],
+              twitter: organization['twitter'],
+              logoImage: imageUrl,
+              contactPerson: organization['contact_person'],
+              slug: actualSlug,
+            };
+          })
+        );
+      }
+
+      if (Object.prototype.hasOwnProperty.call(row, 'videoPresenters')) {
+        presenters.push(
+          ...row['videoPresenters'].map((presenter: any) => {
+            const presenterData = presenter['presenter'];
+
+            const avatarUrl = presenterData['avatar_url']
+              ? presenterData['avatar_url']
+              : `https://avatar.iran.liara.run/username?username=${encodeURI(
+                  presenterData['name']
+                )}`;
+
+            return {
+              id: `${presenterData['id']}`,
+              presenterName: presenterData['name'],
+              presenterDescription: presenterData['biography'],
+              presenterByline: presenterData['byline'],
+              twitter: presenterData['twitter'],
+              email: presenterData['email'],
+              website: presenterData['website'],
+              imageUrl: avatarUrl,
+              slug: `${toSlug(presenterData['name'])}--${presenterData['id']}`,
+            };
+          })
+        );
+      }
+
       videos.push({
         id: `${row['id']}`,
         videoId: row['video_id'],
@@ -64,6 +131,8 @@ export const fetchAllVideos = async () => {
         thumbnailMedium: row['image2'],
         thumbnailHigh: row['image3'],
         slug: `${toSlug(row['title'])}--${row['id']}`,
+        organizations: organizations,
+        presenters: presenters,
       });
     }
   }
