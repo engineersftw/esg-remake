@@ -1,19 +1,19 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
-import FormattedDate from "../../components/FormattedDate.astro";
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import FormattedDate from '../../components/FormattedDate.astro';
 
 export async function getStaticPaths() {
-  const videos = await getCollection("video");
+  const videos = await getCollection('video');
   return videos.map((video) => ({
     params: { slug: video.data.slug },
     props: video,
   }));
 }
-type Props = CollectionEntry<"video">;
+type Props = CollectionEntry<'video'>;
 
 const video = Astro.props;
 ---
@@ -74,7 +74,7 @@ const video = Astro.props;
           <iframe
             width="720"
             height="480"
-            src=`https://www.youtube.com/embed/${video.data.youtubeVideoId}`
+            src=`https://www.youtube.com/embed/${video.data.videoId}`
             title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -84,7 +84,7 @@ const video = Astro.props;
         <div class="prose">
           <div class="title">
             <div class="date">
-              <FormattedDate date={video.data.pubDate} />
+              <FormattedDate date={video.data.publishedAt} />
             </div>
             <h1>{video.data.videoTitle}</h1>
             <hr />

@@ -1,5 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
-import "dotenv/config";
+import { createClient } from '@supabase/supabase-js';
+import 'dotenv/config';
 
 // Create a single supabase client for interacting with your database
 const supabase = createClient(
@@ -30,22 +30,22 @@ async function test() {
   //   .limit(10)
   //   .order("created_at", { ascending: false });
 
-  const { data, error } = await supabase
-    .from("presenters")
-    .select(
-      `*,
-        orgVideos:video_presenters!presenter_id(
-          video:episodes!episode_id(*)
-        )
-        `
-    )
-    .eq("active", true)
-    // .range(range[0], range[1])
-    .order("name")
-    .order("created_at", {
-      ascending: false,
-      referencedTable: "video_presenters",
-    });
+  // const { data, error } = await supabase
+  //   .from("presenters")
+  //   .select(
+  //     `*,
+  //       orgVideos:video_presenters!presenter_id(
+  //         video:episodes!episode_id(*)
+  //       )
+  //       `
+  //   )
+  //   .eq("active", true)
+  //   // .range(range[0], range[1])
+  //   .order("name")
+  //   .order("created_at", {
+  //     ascending: false,
+  //     referencedTable: "video_presenters",
+  //   });
 
   // const { data, error } = await supabase
   //   .from("presenters")
@@ -67,9 +67,9 @@ async function test() {
   // });
 
   if (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching data:', error);
   } else {
-    console.log("Data fetched successfully:", JSON.stringify(data, null, 2));
+    console.log('Data fetched successfully:', JSON.stringify(data, null, 2));
   }
 }
 test();

@@ -1,14 +1,14 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection } from 'astro:content';
 
-import BaseHead from "../../../components/BaseHead.astro";
-import Header from "../../../components/Header.astro";
-import Footer from "../../../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../../consts";
-import FormattedDate from "../../../components/FormattedDate.astro";
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../../consts';
+import FormattedDate from '../../../components/FormattedDate.astro';
 
 export async function getStaticPaths({ paginate }) {
-  const organizations = await getCollection("organization");
+  const organizations = await getCollection('organization');
 
   return organizations.flatMap((organization) => {
     return paginate(organization.data.videos, {
@@ -150,7 +150,7 @@ const { page, organization } = Astro.props;
                     />
                     <h4 class="title">{video.videoTitle}</h4>
                     <p class="date">
-                      <FormattedDate date={video.pubDate} />
+                      <FormattedDate date={video.publishedAt} />
                     </p>
                   </a>
                 </li>

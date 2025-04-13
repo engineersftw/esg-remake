@@ -1,18 +1,20 @@
-import { defineCollection, z } from "astro:content";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import 'dotenv/config';
+import { defineCollection, z } from 'astro:content';
 import {
   fetchAllVideos,
   fetchAllOrgs,
   fetchAllPresenters,
-} from "./libs/content_service";
+} from './libs/content_service';
 
 const video = defineCollection({
   loader: async () => await fetchAllVideos(),
   schema: z.object({
     id: z.string(),
-    youtubeVideoId: z.string(),
+    videoId: z.string(),
     videoTitle: z.string(),
     videoDescription: z.string(),
-    pubDate: z.coerce.date(),
+    publishedAt: z.string(),
     thumbnailDefault: z.string().nullable(),
     thumbnailMedium: z.string().nullable(),
     thumbnailHigh: z.string().nullable(),
@@ -34,10 +36,10 @@ const organization = defineCollection({
     videos: z.array(
       z.object({
         id: z.string(),
-        youtubeVideoId: z.string(),
+        videoId: z.string(),
         videoTitle: z.string(),
         videoDescription: z.string(),
-        pubDate: z.coerce.date(),
+        publishedAt: z.string(),
         thumbnailDefault: z.string().nullable(),
         thumbnailMedium: z.string().nullable(),
         thumbnailHigh: z.string().nullable(),
@@ -62,10 +64,10 @@ const presenter = defineCollection({
     videos: z.array(
       z.object({
         id: z.string(),
-        youtubeVideoId: z.string(),
+        videoId: z.string(),
         videoTitle: z.string(),
         videoDescription: z.string(),
-        pubDate: z.coerce.date(),
+        publishedAt: z.string(),
         thumbnailDefault: z.string().nullable(),
         thumbnailMedium: z.string().nullable(),
         thumbnailHigh: z.string().nullable(),
