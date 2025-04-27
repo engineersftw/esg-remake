@@ -3,6 +3,8 @@ import 'dotenv/config';
 import { defineCollection, z } from 'astro:content';
 import { fetchESGAllVideos, fetchESGAllOrgs, fetchESGAllPresenters } from "@engineersftw/esg-data"
 
+console.log('Checking for env var', import.meta.env.SUPABASE_URL)
+
 const video = defineCollection({
   loader: async () => await fetchESGAllVideos(),
   schema: z.object({
