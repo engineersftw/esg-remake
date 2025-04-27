@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'dotenv/config';
 import { defineCollection, z } from 'astro:content';
-import {
-  fetchAllVideos,
-  fetchAllOrgs,
-  fetchAllPresenters,
-} from './libs/content_service';
+import { fetchESGAllVideos, fetchESGAllOrgs, fetchESGAllPresenters } from "@engineersftw/esg-data"
 
 const video = defineCollection({
-  loader: async () => await fetchAllVideos(),
+  loader: async () => await fetchESGAllVideos(),
   schema: z.object({
     id: z.string(),
     videoId: z.string(),
@@ -48,7 +44,7 @@ const video = defineCollection({
 });
 
 const organization = defineCollection({
-  loader: async () => await fetchAllOrgs(),
+  loader: async () => await fetchESGAllOrgs(),
   schema: z.object({
     id: z.string(),
     orgTitle: z.string(),
@@ -75,7 +71,7 @@ const organization = defineCollection({
 });
 
 const presenter = defineCollection({
-  loader: async () => await fetchAllPresenters(),
+  loader: async () => await fetchESGAllPresenters(),
   schema: z.object({
     id: z.string(),
     presenterName: z.string(),

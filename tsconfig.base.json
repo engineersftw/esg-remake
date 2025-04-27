@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@engineersftw/esg-data": ["packages/esg-data/src/index.ts"],
       "sync-db": ["packages/sync-db/src/index.ts"]
     }
   },
