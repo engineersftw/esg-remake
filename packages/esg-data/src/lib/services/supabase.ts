@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
 
-console.log('Checking for env var', import.meta.env.SUPABASE_URL)
+console.log('What is in the env', process.env);
 
 const { SUPABASE_URL, SUPABASE_KEY } = process.env;
 
