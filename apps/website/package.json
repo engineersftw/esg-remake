@@ -13,11 +13,11 @@
     "@astrojs/mdx": "^4.2.0",
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.2.1",
-    "@supabase/supabase-js": "^2.49.3",
     "astro": "^5.5.2",
     "astro-embed": "^0.9.0",
     "dotenv": "^16.4.7",
-    "papaparse": "^5.5.2"
+    "papaparse": "^5.5.2",
+    "@engineersftw/esg-data":"*"
   },
   "devDependencies": {
     "@types/papaparse": "^5.3.15"
