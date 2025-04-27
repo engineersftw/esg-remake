@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'dotenv/config';
+console.log('Checking for env var', import.meta.env.SUPABASE_URL)
 import { defineCollection, z } from 'astro:content';
 import { fetchESGAllVideos, fetchESGAllOrgs, fetchESGAllPresenters } from "@engineersftw/esg-data"
-
-console.log('Checking for env var', import.meta.env.SUPABASE_URL)
 
 const video = defineCollection({
   loader: async () => await fetchESGAllVideos(),
