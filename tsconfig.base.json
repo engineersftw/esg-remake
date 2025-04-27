@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@engineersftw/esg-data": ["packages/esg-data/src/index.ts"],
+      "@engineersftw/youtube-sync": ["packages/youtube-sync/src/index.ts"],
       "sync-db": ["packages/sync-db/src/index.ts"]
     }
   },

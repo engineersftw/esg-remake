@@ -1,0 +1,20 @@
+{
+  "name": "youtube-sync",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/youtube-sync/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/youtube-sync",
+        "tsConfig": "packages/youtube-sync/tsconfig.lib.json",
+        "packageJson": "packages/youtube-sync/package.json",
+        "main": "packages/youtube-sync/src/index.ts",
+        "assets": ["packages/youtube-sync/*.md"]
+      }
+    }
+  }
+}
