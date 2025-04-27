@@ -1,3 +1,9 @@
 {
-  "name": "esg-website"
+  "name": "esg-website",
+  "targets": {
+    "build": {
+      "cache": true,
+      "dependsOn": ["@engineersftw/sync-db:build"]
+    }
+  }
 }

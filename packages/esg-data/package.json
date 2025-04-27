@@ -1,0 +1,13 @@
+{
+  "name": "@engineersftw/esg-data",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "dotenv": "^16.5.0",
+    "tslib": "^2.3.0"
+  }
+}

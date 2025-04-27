@@ -1,19 +1,20 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
-import BaseHead from "../../components/BaseHead.astro";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
-import FormattedDate from "../../components/FormattedDate.astro";
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { YouTube } from 'astro-embed';
 
 export async function getStaticPaths() {
-  const videos = await getCollection("video");
+  const videos = await getCollection('video');
   return videos.map((video) => ({
     params: { slug: video.data.slug },
     props: video,
   }));
 }
-type Props = CollectionEntry<"video">;
+type Props = CollectionEntry<'video'>;
 
 const video = Astro.props;
 ---
@@ -30,11 +31,12 @@ const video = Astro.props;
       .hero-image {
         width: 100%;
       }
-      .hero-image iframe {
+      .hero-image lite-youtube {
         display: block;
         margin: 0 auto;
         border-radius: 12px;
         box-shadow: var(--box-shadow);
+        text-align: center;
       }
       .prose {
         width: 720px;
@@ -63,6 +65,16 @@ const video = Astro.props;
       .videoDescr {
         white-space: pre-line;
       }
+
+      h5 a {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: rgb(var(--gray-dark));
+      }
+      h5 a:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
 
@@ -71,25 +83,71 @@ const video = Astro.props;
     <main>
       <article>
         <div class="hero-image">
-          <iframe
-            width="720"
-            height="480"
-            src=`https://www.youtube.com/embed/${video.data.youtubeVideoId}`
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen></iframe>
+          <YouTube id={video.data.videoId} posterQuality="max" />
         </div>
         <div class="prose">
           <div class="title">
             <div class="date">
-              <FormattedDate date={video.data.pubDate} />
+              <FormattedDate date={video.data.publishedAt} />
             </div>
             <h1>{video.data.videoTitle}</h1>
             <hr />
           </div>
           <p class="videoDescr">{video.data.videoDescription}</p>
+
+          {video.data.organizations.length > 0 && <h4>Organizations</h4>}
+          <ul>
+            {
+              video.data.organizations.map((org) => (
+                <li key={org.id}>
+                  <h5>
+                    <a
+                      href={`/organization/${org.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={org.logoImage}
+                        alt={org.orgTitle}
+                        width={100}
+                        height={100}
+                        loading="lazy"
+                      />
+                      &nbsp;
+                      {org.orgTitle}
+                    </a>
+                  </h5>
+                </li>
+              ))
+            }
+          </ul>
+
+          {video.data.presenters.length > 0 && <h4>Presenters</h4>}
+          <ul>
+            {
+              video.data.presenters.map((person) => (
+                <li key={person.id}>
+                  <h5>
+                    <a
+                      href={`/presenter/${person.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src={person.imageUrl}
+                        alt={person.presenterName}
+                        width={100}
+                        height={100}
+                        loading="lazy"
+                      />
+                      &nbsp;
+                      {person.presenterName}
+                    </a>
+                  </h5>
+                </li>
+              ))
+            }
+          </ul>
         </div>
       </article>
     </main>
