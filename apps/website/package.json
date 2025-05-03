@@ -10,14 +10,14 @@
     "check_query": "node check_query.js"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.2.0",
+    "@astrojs/mdx": "^4.2.6",
     "@astrojs/rss": "^4.0.11",
-    "@astrojs/sitemap": "^3.2.1",
-    "astro": "^5.5.2",
+    "@astrojs/sitemap": "^3.3.1",
+    "@engineersftw/esg-data": "*",
+    "astro": "^5.7.10",
     "astro-embed": "^0.9.0",
     "dotenv": "^16.4.7",
-    "papaparse": "^5.5.2",
-    "@engineersftw/esg-data":"*"
+    "papaparse": "^5.5.2"
   },
   "devDependencies": {
     "@types/papaparse": "^5.3.15"
