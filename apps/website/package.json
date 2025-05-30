@@ -7,7 +7,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check_query": "node check_query.js"
+    "check_query": "node check_query.js",
+    "deploy": "wrangler pages deploy ./dist --project-name esg-remake",
+    "deploy:production": "wrangler pages deploy ./dist --project-name esg-remake --branch production"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.2.6",
@@ -20,6 +22,7 @@
     "papaparse": "^5.5.2"
   },
   "devDependencies": {
-    "@types/papaparse": "^5.3.15"
+    "@types/papaparse": "^5.3.15",
+    "wrangler": "^4.18.0"
   }
 }

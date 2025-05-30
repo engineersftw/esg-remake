@@ -1,6 +1,6 @@
 # Define default target
 .DEFAULT_GOAL := help
-.PHONEY: help install-dependencies run build preview test test-sync
+.PHONEY: help install-dependencies run build preview deploy deploy-production test test-sync
 
 help:
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' Makefile | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -22,3 +22,9 @@ build: ## Build the Astro project
 
 preview: ## Preview the Astro project
 	./nx run esg-website:preview
+
+deploy: ## Deploy the Astro project
+	./nx run esg-website:deploy
+
+deploy-production: ## Deploy the Astro project
+	./nx run esg-website:deploy:production
