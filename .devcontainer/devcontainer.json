@@ -1,6 +1,8 @@
 {
-  "name": "JavaScript Dev",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "name": "ESG Dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspaces/esg-remake",
   "forwardPorts": [
     4321
   ],

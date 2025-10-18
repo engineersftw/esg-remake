@@ -1,7 +1,5 @@
 {
-  "installation": {
-    "version": "21.5.2"
-  },
+  "installation": { "version": "21.5.3" },
   "plugins": [
     {
       "plugin": "@nx/vite/plugin",
@@ -17,18 +15,8 @@
         "watchDepsTargetName": "watch-deps"
       }
     },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "lint"
-      }
-    },
-    {
-      "plugin": "@nx/jest/plugin",
-      "options": {
-        "targetName": "test"
-      }
-    }
+    { "plugin": "@nx/eslint/plugin", "options": { "targetName": "lint" } },
+    { "plugin": "@nx/jest/plugin", "options": { "targetName": "test" } }
   ],
   "targetDefaults": {
     "@nx/js:tsc": {
